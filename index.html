@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        select,
+        input {
+            background-color: #ffe0e6;
+            border: 2px solid #fbabbb;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 0 2px 0 0;
+        }
+
+        button {
+            background-color: #ffe0e6;
+            border: 2px solid #fbabbb;
+            border-radius: 5px;
+            padding: 7px 16px;
+            margin: 0 2px 0 0;
+            color: #7b7a7a;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body style="display: flex; align-items: center; justify-content: center;">
+    <div>
+        <div id="chart-container" style="width:80vw;">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div style="gap: 10px; width: 80vw; display: flex; align-items: center; justify-content: center;">
+            <select onchange="chartType = this.value;newChart(this)">
+                <option value="bar">Biểu đồ cột</option>
+                <option value="pie">Biểu đồ hình quạt</option>
+                <option value="line">Biểu đồ đoạn thẳng</option>
+            </select>
+            <input type="text" onchange="chartName = this.value; newChart()" placeholder="Tên biểu đồ">
+            <button type="button" onclick="saveCanvas()">Lưu biểu đồ</button>
+            <input id="solieu" type="number" placeholder="Số liệu">
+            <input id="tensolieu" type="text" placeholder="Tên số liệu">
+            <button type="button" onclick="addData(myChart)">Thêm số liệu</button>
+            <button type="button" onclick="removeData(myChart)">Xóa tất cả số liệu</button>
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+        chartName = '', chartType = 'bar'
+        labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+        data = [12, 19, 3, 5, 2, 3]
+        myChart = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: chartName,
+                    data: data,
+                    borderWidth: 1,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ]
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function newChart(object) {
+            if (chartType == 'pie') { document.getElementById("chart-container").style.width = '40vw' }
+            else { document.getElementById("chart-container").style.width = '80vw' }
+            myChart.destroy()
+            myChart = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartName,
+                        data: data,
+                        borderWidth: 1,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ]
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function addData(chart) {
+            labels.push(document.getElementById("tensolieu").value);
+            data.push(document.getElementById("solieu").value);
+            newChart()
+        }
+
+        function removeData(chart) {
+            labels = []
+            data = []
+            newChart()
+        }
+
+        function saveCanvas() {
+            var image = ctx.toDataURL();
+            var tmpLink = document.createElement('a');
+            tmpLink.download = chartName + '.png';
+            tmpLink.href = image;
+            document.body.appendChild(tmpLink);
+            tmpLink.click();
+            document.body.removeChild(tmpLink);
+        }
+    </script>
+</body>
+
+</html>
